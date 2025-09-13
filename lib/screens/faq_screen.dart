@@ -4,7 +4,6 @@ import '../widgets/faq_card.dart';
 import '../models/faq.dart';
 import '../services/api_service.dart';
 import '../services/local_cache.dart';
-import '../theme/colors.dart';
 import '../theme/design_tokens.dart';
 
 class FAQScreen extends StatefulWidget {
@@ -139,12 +138,14 @@ class _FAQScreenState extends State<FAQScreen> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+    final colorScheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
     
     return Scaffold(
       body: Stack(
         children: [
           Container(
-            color: isDarkMode ? AppColors.backgroundDark : const Color(0xFFFAFBFC),
+            color: isDarkMode ? colorScheme.surface : const Color(0xFFFAFBFC),
           ),
           // Background pulses
           Positioned(
@@ -158,7 +159,7 @@ class _FAQScreenState extends State<FAQScreen> with TickerProviderStateMixin {
                   width: 384.w, 
                   height: 384.h, 
                   decoration: BoxDecoration(
-                    color: AppColors.primaryTeal.withOpacity(0.3), 
+                    color: colorScheme.primary.withOpacity(0.3), 
                     shape: BoxShape.circle
                   )
                 ),
@@ -192,8 +193,8 @@ class _FAQScreenState extends State<FAQScreen> with TickerProviderStateMixin {
                   SizedBox(height: DesignTokens.spacingMd),
                   Text(
                     'Curious about Islam? Start here.',
-                    style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                          color: AppColors.primaryTeal,
+                    style: textTheme.headlineMedium?.copyWith(
+                          color: colorScheme.primary,
                           fontWeight: FontWeight.bold,
                         ),
                     textAlign: TextAlign.center,
@@ -218,17 +219,20 @@ class _FAQScreenState extends State<FAQScreen> with TickerProviderStateMixin {
   }
 
   Widget _buildLoadingState() {
+    final colorScheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
+    
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           CircularProgressIndicator(
-            color: AppColors.primaryTeal,
+            color: colorScheme.primary,
           ),
           SizedBox(height: DesignTokens.spacingMd),
           Text(
             'Loading FAQs...',
-            style: Theme.of(context).textTheme.bodyMedium,
+            style: textTheme.bodyMedium,
           ),
         ],
       ),
@@ -236,6 +240,9 @@ class _FAQScreenState extends State<FAQScreen> with TickerProviderStateMixin {
   }
 
   Widget _buildErrorState() {
+    final colorScheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
+    
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -243,18 +250,18 @@ class _FAQScreenState extends State<FAQScreen> with TickerProviderStateMixin {
           Icon(
             Icons.error_outline,
             size: 60.r,
-            color: AppColors.error,
+            color: colorScheme.error,
           ),
           SizedBox(height: DesignTokens.spacingMd),
           Text(
             'Failed to load FAQs',
-            style: Theme.of(context).textTheme.bodyLarge,
+            style: textTheme.bodyLarge,
           ),
           SizedBox(height: DesignTokens.spacingMd),
           ElevatedButton(
             onPressed: _loadFaqs,
             style: ElevatedButton.styleFrom(
-              backgroundColor: AppColors.primaryTeal,
+              backgroundColor: colorScheme.primary,
               foregroundColor: Colors.white,
             ),
             child: Text('Retry'),
@@ -265,6 +272,9 @@ class _FAQScreenState extends State<FAQScreen> with TickerProviderStateMixin {
   }
 
   Widget _buildEmptyState() {
+    final colorScheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
+    
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -272,12 +282,12 @@ class _FAQScreenState extends State<FAQScreen> with TickerProviderStateMixin {
           Icon(
             Icons.question_mark,
             size: 60.r,
-            color: AppColors.neutralGray,
+            color: colorScheme.outline,
           ),
           SizedBox(height: DesignTokens.spacingMd),
           Text(
             'No FAQs available',
-            style: Theme.of(context).textTheme.bodyLarge,
+            style: textTheme.bodyLarge,
           ),
         ],
       ),

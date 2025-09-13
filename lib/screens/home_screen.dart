@@ -6,7 +6,6 @@ import 'package:share_plus/share_plus.dart';
 import '../models/quote.dart';
 import '../services/api_service.dart';
 import '../services/local_cache.dart';
-import '../theme/colors.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -147,13 +146,15 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+    final colorScheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
     
     return Scaffold(
       body: Stack(
         children: [
           Container(
             color: isDarkMode 
-              ? AppColors.backgroundDark 
+              ? colorScheme.surface 
               : const Color(0xFFFAFBFC)
           ),
           // Background pulses
@@ -168,7 +169,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                   width: 384.w, 
                   height: 384.h,
                   decoration: BoxDecoration(
-                    color: AppColors.primaryTeal.withOpacity(0.3), 
+                    color: colorScheme.primary.withOpacity(0.3), 
                     shape: BoxShape.circle
                   ),
                 ),
@@ -206,7 +207,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                       height: 500.h,
                       decoration: BoxDecoration(
                         color: isDarkMode 
-                          ? AppColors.glassDark 
+                          ? colorScheme.surface.withOpacity(0.3) 
                           : Colors.white.withOpacity(0.3),
                         borderRadius: BorderRadius.circular(24.r),
                         boxShadow: [
@@ -236,7 +237,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                                       fontSize: 28.sp, 
                                       fontWeight: FontWeight.w700, 
                                       color: isDarkMode 
-                                        ? AppColors.textPrimaryDark 
+                                        ? colorScheme.onSurface 
                                         : const Color(0xFF334155),
                                       height: 1.2
                                     ),
@@ -249,7 +250,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                                   style: GoogleFonts.lato(
                                     fontSize: 16.sp, 
                                     color: isDarkMode 
-                                      ? AppColors.textSecondaryDark 
+                                      ? colorScheme.onSurfaceVariant 
                                       : const Color(0xFF64748B)
                                   )
                                 ),
@@ -276,7 +277,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                 width: 56.w, 
                 height: 56.h,
                 decoration: BoxDecoration(
-                  color: AppColors.primaryTeal, 
+                  color: colorScheme.primary, 
                   shape: BoxShape.circle, 
                   boxShadow: [
                     BoxShadow(
@@ -306,7 +307,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                 width: 56.w, 
                 height: 56.h,
                 decoration: BoxDecoration(
-                  color: AppColors.primaryTeal, 
+                  color: colorScheme.primary, 
                   shape: BoxShape.circle, 
                   boxShadow: [
                     BoxShadow(

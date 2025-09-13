@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:url_launcher/url_launcher.dart';
+import '../widgets/bottom_nav.dart';
 
 class AboutScreen extends StatefulWidget {
   const AboutScreen({super.key});
@@ -11,15 +12,22 @@ class AboutScreen extends StatefulWidget {
   State<AboutScreen> createState() => _AboutScreenState();
 }
 
-class _AboutScreenState extends State<AboutScreen> with TickerProviderStateMixin {
+class _AboutScreenState extends State<AboutScreen>
+    with TickerProviderStateMixin {
   late AnimationController _pulse1, _pulse2;
   final ScrollController _scrollController = ScrollController();
 
   @override
   void initState() {
     super.initState();
-    _pulse1 = AnimationController(duration: const Duration(seconds: 2), vsync: this)..repeat(reverse: true);
-    _pulse2 = AnimationController(duration: const Duration(seconds: 2), vsync: this)..repeat(reverse: true);
+    _pulse1 = AnimationController(
+      duration: const Duration(seconds: 2),
+      vsync: this,
+    )..repeat(reverse: true);
+    _pulse2 = AnimationController(
+      duration: const Duration(seconds: 2),
+      vsync: this,
+    )..repeat(reverse: true);
     _pulse2.value = 0.5;
   }
 
@@ -34,28 +42,32 @@ class _AboutScreenState extends State<AboutScreen> with TickerProviderStateMixin
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
+    final colorScheme = Theme.of(context).colorScheme;
+    
     return Scaffold(
-      backgroundColor: isDark ? const Color(0xFF121212) : const Color(0xFFFAFBFC),
+      backgroundColor: isDark
+          ? colorScheme.surface
+          : const Color(0xFFFAFBFC),
       body: Stack(
         children: [
           // Subtle grid background
           Positioned.fill(
-            child: DecoratedBox(
-              decoration: BoxDecoration(
-                image: DecorationImage(
-                  image: const NetworkImage('https://via.placeholder.com/24x24/FAFBFC/80808012?text=.'), // Mimic subtle grid
-                  repeat: ImageRepeat.repeat,
-                ),
-              ),
+            child: CustomPaint(
+              painter: GridPainter(color: Colors.grey.withOpacity(0.05)),
+              size: Size.infinite,
             ),
           ),
           // Glass overlay
           Positioned.fill(
             child: Container(
               decoration: BoxDecoration(
-                color: isDark ? Colors.black.withOpacity(0.2) : Colors.white.withOpacity(0.1),
+                color: isDark
+                    ? Colors.black.withOpacity(0.2)
+                    : Colors.white.withOpacity(0.1),
               ),
-              child: BackdropFilter(filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10)),
+              child: BackdropFilter(
+                filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+              ),
             ),
           ),
           // Background pulses
@@ -67,10 +79,18 @@ class _AboutScreenState extends State<AboutScreen> with TickerProviderStateMixin
               builder: (_, __) => Transform.scale(
                 scale: 1 + (_pulse1.value * 0.2),
                 child: Container(
-                  width: 384.w, height: 384.h,
+                  width: 384.w,
+                  height: 384.h,
                   decoration: BoxDecoration(
-                    color: (isDark ? Colors.teal[900]! : Colors.teal[200]!).withOpacity(0.4),
+                    color: (isDark ? Colors.teal[900]! : Colors.teal[200]!)
+                        .withOpacity(0.4),
                     shape: BoxShape.circle,
+                  ),
+                  child: Opacity(
+                    opacity: 0.3,
+                    child: Container(
+                      decoration: BoxDecoration(shape: BoxShape.circle),
+                    ),
                   ),
                 ),
               ),
@@ -84,10 +104,18 @@ class _AboutScreenState extends State<AboutScreen> with TickerProviderStateMixin
               builder: (_, __) => Transform.scale(
                 scale: 1 + (_pulse2.value * 0.2),
                 child: Container(
-                  width: 384.w, height: 384.h,
+                  width: 384.w,
+                  height: 384.h,
                   decoration: BoxDecoration(
-                    color: (isDark ? Colors.amber[900]! : Colors.amber[200]!).withOpacity(0.4),
+                    color: (isDark ? Colors.amber[900]! : Colors.amber[200]!)
+                        .withOpacity(0.4),
                     shape: BoxShape.circle,
+                  ),
+                  child: Opacity(
+                    opacity: 0.3,
+                    child: Container(
+                      decoration: BoxDecoration(shape: BoxShape.circle),
+                    ),
                   ),
                 ),
               ),
@@ -102,25 +130,38 @@ class _AboutScreenState extends State<AboutScreen> with TickerProviderStateMixin
                   child: Center(
                     child: Text(
                       'Discover Islam',
-                      style: GoogleFonts.inter(fontSize: 32.sp, fontWeight: FontWeight.w700, color: isDark ? Colors.white : const Color(0xFF111827)),
+                      style: GoogleFonts.inter(
+                        fontSize: 32.sp,
+                        fontWeight: FontWeight.w700,
+                        color: isDark ? Colors.white : const Color(0xFF111827),
+                      ),
                     ),
                   ),
                 ),
               ),
               SliverToBoxAdapter(
-                child: AnimatedOpacity(
-                  opacity: 1.0,
-                  duration: const Duration(milliseconds: 200),
-                  child: Center(
+                child: Center(
+                  child: AnimatedOpacity(
+                    opacity: 1.0,
+                    duration: const Duration(milliseconds: 200),
                     child: Container(
-                      width: 192.w, height: 192.h,
+                      width: 192.w,
+                      height: 192.h,
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
                         image: const DecorationImage(
-                          image: NetworkImage('https://lh3.googleusercontent.com/aida-public/AB6AXuDtJMhUT9TQdGcsqg8KHyg-Yf1pNI03Vk410Lm14a15BB_oM25KnoEk_R2C4EhQG1tlCeQhJKHBBtOk86Kjxr609UcbgEmv2R8kj-edJtKFr_rZxM3jgmjtZrYlUxANJdkrwM53X3BWN2lfglNBst-5npAg0fQ0Eg0yYMfnryp1KQftWrq-1YemS48fIJ8xLGT7F4Tq6AXdRZI_aT1Z2mh76DVCZOpVuysLtzUtUYj9w_AcpWq7yZy7C1uvDQncN0BKNqkYqdyWz_k'),
+                          image: NetworkImage(
+                            'https://lh3.googleusercontent.com/aida-public/AB6AXuDtJMhUT9TQdGcsqg8KHyg-Yf1pNI03Vk410Lm14a15BB_oM25KnoEk_R2C4EhQG1tlCeQhJKHBBtOk86Kjxr609UcbgEmv2R8kj-edJtKFr_rZxM3jgmjtZrYlUxANJdkrwM53X3BWN2lfglNBst-5npAg0fQ0Eg0yYMfnryp1KQftWrq-1YemS48fIJ8xLGT7F4Tq6AXdRZI_aT1Z2mh76DVCZOpVuysLtzUtUYj9w_AcpWq7yZy7C1uvDQncN0BKNqkYqdyWz_k',
+                          ),
                           fit: BoxFit.cover,
                         ),
-                        boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.1), blurRadius: 20, offset: const Offset(0, 10))],
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.1),
+                            blurRadius: 20,
+                            offset: const Offset(0, 10),
+                          ),
+                        ],
                       ),
                     ),
                   ),
@@ -151,27 +192,57 @@ class _AboutScreenState extends State<AboutScreen> with TickerProviderStateMixin
                 child: Padding(
                   padding: EdgeInsets.only(top: 32.h),
                   child: Center(
-                    child: ElevatedButton.icon(
-                      onPressed: () async {
-                        final Uri url = Uri.parse('mailto:support@pathtopeace.app?subject=I have a question!');
+                    child: GestureDetector(
+                      onTap: () async {
+                        final Uri url = Uri.parse(
+                          'mailto:support@pathtopeace.app?subject=I have a question!',
+                        );
                         if (await canLaunchUrl(url)) {
                           await launchUrl(url);
                         }
                       },
-                      icon: Icon(Icons.contact_support, size: 24.sp),
-                      label: Text('Ask a Question', style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.w700)),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFF0EA5A4),
-                        foregroundColor: Colors.white,
-                        padding: EdgeInsets.symmetric(horizontal: 32.w, vertical: 16.h),
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(32.r)),
-                        elevation: 8,
-                        minimumSize: Size(48.w, 48.h),
+                      child: Container(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 32.w,
+                          vertical: 16.h,
+                        ),
+                        decoration: BoxDecoration(
+                          color: colorScheme.primary,
+                          borderRadius: BorderRadius.circular(32.r),
+                          boxShadow: [
+                            BoxShadow(
+                              color: colorScheme.primary.withOpacity(0.3),
+                              blurRadius: 20,
+                              offset: const Offset(0, 10),
+                            ),
+                          ],
+                        ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Icon(
+                              Icons.contact_support,
+                              color: Colors.white,
+                              size: 24.sp,
+                            ),
+                            SizedBox(width: 8.w),
+                            Text(
+                              'Ask a Question',
+                              style: GoogleFonts.inter(
+                                fontSize: 18.sp,
+                                fontWeight: FontWeight.w700,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ),
                 ),
               ),
+              // Add some bottom padding to ensure content isn't cut off by bottom nav
+              SliverToBoxAdapter(child: SizedBox(height: 80.h)),
             ],
           ),
         ],
@@ -181,6 +252,8 @@ class _AboutScreenState extends State<AboutScreen> with TickerProviderStateMixin
 
   Widget _buildSection(BuildContext context, String text, int index) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
+    final colorScheme = Theme.of(context).colorScheme;
+    
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 8.h),
       child: AnimatedOpacity(
@@ -189,19 +262,51 @@ class _AboutScreenState extends State<AboutScreen> with TickerProviderStateMixin
         child: Container(
           padding: EdgeInsets.all(24.w),
           decoration: BoxDecoration(
-            color: isDark ? Colors.grey[900]!.withOpacity(0.3) : Colors.white.withOpacity(0.3),
+            color: isDark
+                ? colorScheme.surface.withOpacity(0.3)
+                : Colors.white.withOpacity(0.3),
             borderRadius: BorderRadius.circular(16.r),
-            boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.1), blurRadius: 6, offset: const Offset(0, 4))],
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.1),
+                blurRadius: 6,
+                offset: const Offset(0, 4),
+              ),
+            ],
           ),
           child: BackdropFilter(
             filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
             child: Text(
               text,
-              style: GoogleFonts.lato(fontSize: 16.sp, color: isDark ? Colors.grey[300] : const Color(0xFF374151), height: 1.5),
+              style: GoogleFonts.lato(
+                fontSize: 16.sp,
+                color: isDark ? Colors.grey[300] : const Color(0xFF374151),
+                height: 1.5,
+              ),
             ),
           ),
         ),
       ),
     );
   }
+}
+
+class GridPainter extends CustomPainter {
+  final Color color;
+  GridPainter({required this.color});
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final paint = Paint()..color = color;
+    final step = 24.0;
+    for (double x = 0; x < size.width; x += step) {
+      canvas.drawLine(Offset(x, 0), Offset(x, size.height), paint);
+    }
+    for (double y = 0; y < size.height; y += step) {
+      canvas.drawLine(Offset(0, y), Offset(size.width, y), paint);
+    }
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }

@@ -7,7 +7,7 @@ import 'screens/faq_screen.dart';
 import 'screens/about_screen.dart';
 import 'screens/question_screen.dart';
 import 'widgets/bottom_nav.dart';
-import 'theme/colors.dart';
+import 'theme/theme_manager.dart';
 
 void main() {
   runApp(const MyApp());
@@ -48,22 +48,16 @@ class _MyAppState extends State<MyApp> {
             return MaterialApp(
               title: 'Path to Peace',
               debugShowCheckedModeBanner: false,
-              theme: ThemeData(
-                useMaterial3: true,
-                colorScheme: lightDynamic ??
-                    ColorScheme.fromSeed(
-                      seedColor: AppColors.primaryTeal,
-                      brightness: Brightness.light,
-                    ),
-              ),
-              darkTheme: ThemeData(
-                useMaterial3: true,
-                colorScheme: darkDynamic ??
-                    ColorScheme.fromSeed(
-                      seedColor: AppColors.primaryTeal,
-                      brightness: Brightness.dark,
-                    ),
-              ),
+              theme: lightDynamic != null
+                  ? AppThemes.lightTheme.copyWith(
+                      colorScheme: lightDynamic,
+                    )
+                  : AppThemes.lightTheme,
+              darkTheme: darkDynamic != null
+                  ? AppThemes.darkTheme.copyWith(
+                      colorScheme: darkDynamic,
+                    )
+                  : AppThemes.darkTheme,
               themeMode: ThemeMode.system,
               localizationsDelegates: const [
                 GlobalMaterialLocalizations.delegate,

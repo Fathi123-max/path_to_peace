@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'dart:ui';
-import '../theme/colors.dart';
 
 class BottomNav extends StatefulWidget {
   final int currentIndex;
@@ -17,13 +16,15 @@ class _BottomNavState extends State<BottomNav> {
   @override
   Widget build(BuildContext context) {
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+    final colorScheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
     
     return Container(
       height: 65.h,
       decoration: BoxDecoration(
         color: isDarkMode 
-          ? AppColors.glassDark 
-          : Colors.white.withOpacity(0.3),
+          ? colorScheme.surface.withOpacity(0.3) 
+          : colorScheme.surface.withOpacity(0.3),
         borderRadius: BorderRadius.vertical(top: Radius.circular(24.r)),
         boxShadow: [
           BoxShadow(
@@ -58,10 +59,10 @@ class _BottomNavState extends State<BottomNav> {
                           child: FaIcon(
                             i == 0 ? FontAwesomeIcons.quoteLeft : i == 1 ? FontAwesomeIcons.circleQuestion : i == 2 ? FontAwesomeIcons.comments : FontAwesomeIcons.circleInfo,
                             color: widget.currentIndex == i 
-                              ? AppColors.primaryTeal 
+                              ? colorScheme.primary 
                               : isDarkMode 
-                                ? AppColors.textSecondaryDark 
-                                : AppColors.neutralGray, 
+                                ? colorScheme.onSurfaceVariant 
+                                : colorScheme.outline, 
                             size: 24.sp,
                           ),
                         ),
@@ -70,12 +71,12 @@ class _BottomNavState extends State<BottomNav> {
                           duration: Duration(milliseconds: 300),
                           child: Text(
                             ['Quotes', 'FAQ', 'Questions', 'About'][i], 
-                            style: TextStyle(
-                              fontSize: 12.sp, 
-                              fontWeight: FontWeight.w500, 
-                              color: isDarkMode 
-                                ? AppColors.textPrimaryDark 
-                                : AppColors.primaryTeal
+                            style: textTheme.labelMedium?.copyWith(
+                              color: widget.currentIndex == i 
+                                ? colorScheme.primary 
+                                : isDarkMode 
+                                  ? colorScheme.onSurface 
+                                  : colorScheme.primary
                             )
                           ),
                         ),

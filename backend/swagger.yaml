@@ -1,0 +1,171 @@
+swagger: '2.0'
+info:
+  title: Path to Peace API
+  description: Backend API for the Path to Peace mobile app
+  version: 1.0.0
+host: localhost:3000
+schemes:
+  - http
+  - https
+basePath: /
+produces:
+  - application/json
+paths:
+  /quotes:
+    get:
+      summary: Get quote of the day or random quote
+      description: Returns either the quote of the day or a random quote based on query parameter
+      parameters:
+        - name: random
+          in: query
+          description: Set to 'true' to get a random quote
+          required: false
+          type: string
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/QuoteResponse'
+        '500':
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+  /faq:
+    get:
+      summary: Get all FAQs
+      description: Returns a list of all frequently asked questions
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/FAQsResponse'
+        '500':
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+  /questions:
+    post:
+      summary: Submit a question
+      description: Submit a question to be answered by an expert
+      parameters:
+        - name: question
+          in: body
+          description: Question details
+          required: true
+          schema:
+            $ref: '#/definitions/QuestionRequest'
+      responses:
+        '201':
+          description: Question submitted successfully
+          schema:
+            $ref: '#/definitions/SuccessResponse'
+        '400':
+          description: Validation error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        '500':
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+  /health:
+    get:
+      summary: Health check
+      description: Check if the API is running
+      responses:
+        '200':
+          description: API is running
+          schema:
+            $ref: '#/definitions/HealthResponse'
+
+definitions:
+  Quote:
+    type: object
+    properties:
+      id:
+        type: string
+      text:
+        type: string
+      source:
+        type: string
+    required:
+      - id
+      - text
+      - source
+
+  FAQ:
+    type: object
+    properties:
+      id:
+        type: string
+      question:
+        type: string
+      answer:
+        type: string
+    required:
+      - id
+      - question
+      - answer
+
+  QuoteResponse:
+    type: object
+    properties:
+      success:
+        type: boolean
+      data:
+        $ref: '#/definitions/Quote'
+      message:
+        type: string
+
+  FAQsResponse:
+    type: object
+    properties:
+      success:
+        type: boolean
+      data:
+        type: array
+        items:
+          $ref: '#/definitions/FAQ'
+
+  QuestionRequest:
+    type: object
+    properties:
+      name:
+        type: string
+      email:
+        type: string
+        format: email
+      question:
+        type: string
+    required:
+      - name
+      - email
+      - question
+
+  SuccessResponse:
+    type: object
+    properties:
+      success:
+        type: boolean
+      message:
+        type: string
+
+  ErrorResponse:
+    type: object
+    properties:
+      success:
+        type: boolean
+      error:
+        type: string
+      message:
+        type: string
+
+  HealthResponse:
+    type: object
+    properties:
+      success:
+        type: boolean
+      message:
+        type: string
+      timestamp:
+        type: string
+        format: date-time

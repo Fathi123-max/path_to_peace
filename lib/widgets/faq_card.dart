@@ -2,9 +2,8 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:animations/animations.dart';
+import 'package:share_plus/share_plus.dart';
 import '../models/faq.dart';
-import '../widgets/share_modal.dart';
 import '../theme/colors.dart';
 import '../theme/design_tokens.dart';
 import '../theme/typography.dart';
@@ -69,16 +68,8 @@ class _FAQCardState extends State<FAQCard> with SingleTickerProviderStateMixin {
     super.dispose();
   }
 
-  void _showShareModal() {
-    showModal(
-      context: context,
-      builder: (BuildContext context) {
-        return ShareModal(
-          content: '${widget.faq.question}\n\n${widget.faq.answer}',
-          title: 'Share FAQ',
-        );
-      },
-    );
+  void _shareFAQ() {
+    Share.share('${widget.faq.question}\n\n${widget.faq.answer}');
   }
 
   @override
@@ -164,31 +155,21 @@ class _FAQCardState extends State<FAQCard> with SingleTickerProviderStateMixin {
                         SizedBox(height: DesignTokens.spacingMd),
                         Align(
                           alignment: Alignment.centerRight,
-                          child: OpenContainer(
-                            closedColor: Colors.transparent,
-                            openColor: Colors.transparent,
-                            closedBuilder: (context, action) {
-                              return Container(
-                                width: DesignTokens.buttonHeight,
-                                height: DesignTokens.buttonHeight,
-                                decoration: BoxDecoration(
-                                  color: AppColors.primaryTeal,
-                                  shape: BoxShape.circle,
-                                ),
-                                child: Icon(
-                                  Icons.share,
-                                  color: Colors.white,
-                                  size: DesignTokens.iconSm,
-                                ),
-                              );
-                            },
-                            openBuilder: (context, action) {
-                              return ShareModal(
-                                content:
-                                    '${widget.faq.question}\n\n${widget.faq.answer}',
-                                title: 'Share FAQ',
-                              );
-                            },
+                          child: GestureDetector(
+                            onTap: _shareFAQ,
+                            child: Container(
+                              width: DesignTokens.buttonHeight,
+                              height: DesignTokens.buttonHeight,
+                              decoration: BoxDecoration(
+                                color: AppColors.primaryTeal,
+                                shape: BoxShape.circle,
+                              ),
+                              child: Icon(
+                                Icons.share,
+                                color: Colors.white,
+                                size: DesignTokens.iconSm,
+                              ),
+                            ),
                           ),
                         ),
                       ],

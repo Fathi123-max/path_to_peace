@@ -5,6 +5,7 @@ import 'package:dynamic_color/dynamic_color.dart';
 import 'screens/home_screen.dart';
 import 'screens/faq_screen.dart';
 import 'screens/about_screen.dart';
+import 'screens/question_screen.dart';
 import 'widgets/bottom_nav.dart';
 import 'theme/colors.dart';
 
@@ -25,6 +26,7 @@ class _MyAppState extends State<MyApp> {
   final List<Widget> _screens = [
     const HomeScreen(),
     const FAQScreen(),
+    const QuestionScreen(),
     const AboutScreen(),
   ];
 

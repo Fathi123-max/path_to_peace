@@ -7,7 +7,6 @@ import '../models/quote.dart';
 import '../widgets/share_modal.dart';
 import '../theme/colors.dart';
 import '../theme/design_tokens.dart';
-import '../theme/typography.dart';
 
 class QuoteCard extends StatefulWidget {
   final Quote quote;
@@ -40,15 +39,6 @@ class _QuoteCardState extends State<QuoteCard>
   void dispose() {
     _controller.dispose();
     super.dispose();
-  }
-
-  void _showShareModal() {
-    showModal(
-      context: context,
-      builder: (BuildContext context) {
-        return ShareModal(content: widget.quote.text, title: 'Share Quote');
-      },
-    );
   }
 
   @override
@@ -115,19 +105,6 @@ class _QuoteCardState extends State<QuoteCard>
                                   color: const Color(0xFF475569), // text-slate-600
                                 ),
                               ),
-                              if (widget.quote.context != null) ...[
-                                SizedBox(height: DesignTokens.spacingXs),
-                                Text(
-                                  widget.quote.context!,
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                    fontFamily: 'Lato',
-                                    fontSize: 14.sp,
-                                    fontWeight: FontWeight.normal,
-                                    color: const Color(0xFF64748B),
-                                  ),
-                                ),
-                              ],
                             ],
                           ),
                         ),

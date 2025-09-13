@@ -64,7 +64,23 @@ class _FAQScreenState extends State<FAQScreen> {
       setState(() {
         _faqs = faqs;
         _isLoading = false;
+        _isError = false;
       });
+    } on ApiException catch (e) {
+      // Handle API exceptions
+      setState(() {
+        _isLoading = false;
+        _isError = true;
+      });
+      // Could show a snackbar or dialog with the error message
+      if (e.statusCode == 429) {
+        // Handle rate limiting specifically
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Too many requests. Please try again later.')),
+          );
+        }
+      }
     } catch (e) {
       setState(() {
         _isLoading = false;

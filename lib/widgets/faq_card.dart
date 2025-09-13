@@ -74,13 +74,17 @@ class _FAQCardState extends State<FAQCard> with SingleTickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+    
     return Container(
       decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.surface.withOpacity(0.8),
+        color: isDarkMode ? AppColors.glassDark : AppColors.glassLight,
         borderRadius: BorderRadius.circular(DesignTokens.radiusXl),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: isDarkMode 
+              ? Colors.black.withOpacity(0.2) 
+              : Colors.black.withOpacity(0.05),
             blurRadius: 20.r,
             offset: Offset(0, 10.r),
           ),
@@ -99,9 +103,9 @@ class _FAQCardState extends State<FAQCard> with SingleTickerProviderStateMixin {
                 child: Container(
                   width: double.infinity,
                   decoration: BoxDecoration(
-                    color: Theme.of(
-                      context,
-                    ).colorScheme.surface.withOpacity(0.5),
+                    color: isDarkMode 
+                      ? AppColors.glassDark.withOpacity(0.7) 
+                      : AppColors.glassLight.withOpacity(0.7),
                   ),
                   child: Padding(
                     padding: EdgeInsets.all(DesignTokens.spacingLg),
@@ -112,7 +116,12 @@ class _FAQCardState extends State<FAQCard> with SingleTickerProviderStateMixin {
                             widget.faq.question,
                             style: AppTypography.headlineSmall(
                               context,
-                            ).copyWith(fontWeight: FontWeight.w600),
+                            ).copyWith(
+                              fontWeight: FontWeight.w600,
+                              color: isDarkMode 
+                                ? AppColors.textPrimaryDark 
+                                : AppColors.textPrimaryLight,
+                            ),
                           ),
                         ),
                         SizedBox(width: DesignTokens.spacingSm),
@@ -120,7 +129,7 @@ class _FAQCardState extends State<FAQCard> with SingleTickerProviderStateMixin {
                           turns: _rotateAnimation,
                           child: Icon(
                             Icons.expand_more,
-                            color: AppColors.neutralGray,
+                            color: AppColors.primaryTeal,
                           ),
                         ),
                       ],
@@ -134,9 +143,9 @@ class _FAQCardState extends State<FAQCard> with SingleTickerProviderStateMixin {
                 child: Container(
                   width: double.infinity,
                   decoration: BoxDecoration(
-                    color: Theme.of(
-                      context,
-                    ).colorScheme.surface.withOpacity(0.7),
+                    color: isDarkMode 
+                      ? AppColors.glassDark.withOpacity(0.5) 
+                      : AppColors.glassLight.withOpacity(0.5),
                   ),
                   child: Padding(
                     padding: EdgeInsets.fromLTRB(
@@ -150,7 +159,11 @@ class _FAQCardState extends State<FAQCard> with SingleTickerProviderStateMixin {
                       children: [
                         Text(
                           widget.faq.answer,
-                          style: AppTypography.bodyMedium(context),
+                          style: AppTypography.bodyMedium(context).copyWith(
+                            color: isDarkMode 
+                              ? AppColors.textPrimaryDark 
+                              : AppColors.textPrimaryLight,
+                          ),
                         ),
                         SizedBox(height: DesignTokens.spacingMd),
                         Align(

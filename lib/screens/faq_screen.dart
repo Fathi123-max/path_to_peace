@@ -14,16 +14,27 @@ class FAQScreen extends StatefulWidget {
   State<FAQScreen> createState() => _FAQScreenState();
 }
 
-class _FAQScreenState extends State<FAQScreen> {
+class _FAQScreenState extends State<FAQScreen> with TickerProviderStateMixin {
   List<Faq>? _faqs;
   bool _isLoading = true;
   bool _isError = false;
   int _expandedIndex = -1;
+  late AnimationController _pulse1, _pulse2;
 
   @override
   void initState() {
     super.initState();
     _loadFaqs();
+    _pulse1 = AnimationController(duration: const Duration(seconds: 2), vsync: this)..repeat(reverse: true);
+    _pulse2 = AnimationController(duration: const Duration(seconds: 2), vsync: this)..repeat(reverse: true);
+    _pulse2.value = 0.5;
+  }
+
+  @override
+  void dispose() {
+    _pulse1.dispose();
+    _pulse2.dispose();
+    super.dispose();
   }
 
   Future<void> _loadFaqs() async {
@@ -54,6 +65,36 @@ class _FAQScreenState extends State<FAQScreen> {
             id: "2",
             question: "Do Muslims believe in Jesus?",
             answer: "Yes, Muslims hold Jesus (Isa in Arabic) in high regard as one of the great prophets. The Quran mentions Jesus 25 times and confirms his virgin birth. However, Muslims do not believe that Jesus is divine or the son of God, but rather a messenger of God.",
+          ),
+          Faq(
+            id: "3",
+            question: "Who is God in Islam?",
+            answer: "In Islam, God, known as Allah, is the one, unique, and incomparable creator and sustainer of the universe. He is described as all-merciful, all-powerful, and eternal. Islam emphasizes that God is beyond human comprehension and has no partners, children, or equals.",
+          ),
+          Faq(
+            id: "4",
+            question: "What is the Quran?",
+            answer: "The Quran is the holy book of Islam, believed by Muslims to be the literal word of God (Allah) as revealed to the Prophet Muhammad over a period of 23 years. It is the central religious text of Islam, guiding Muslims in all aspects of life.",
+          ),
+          Faq(
+            id: "5",
+            question: "Who is Muhammad?",
+            answer: "Muhammad is considered the final prophet of God in Islam. Muslims believe he received revelations from God, which form the Quran. He is seen as a role model for his exemplary character and teachings, but he is not worshipped.",
+          ),
+          Faq(
+            id: "6",
+            question: "Do Muslims worship Muhammad?",
+            answer: "No, Muslims do not worship Muhammad or any other prophet. They worship only God (Allah). Muhammad is highly respected as God's final messenger, but he is considered a human being. Attributing divinity to anyone or anything other than God is a major sin in Islam.",
+          ),
+          Faq(
+            id: "7",
+            question: "What does Islam say about women?",
+            answer: "Islam grants women full rights and equality in spiritual, legal, and social matters. The Quran emphasizes the equal value of men and women before God. Practices like veiling stem from modesty, not degradation.",
+          ),
+          Faq(
+            id: "8",
+            question: "Is Islam compatible with modernity?",
+            answer: "Yes, Islam encourages science, reasoning, and innovation, as seen in the Golden Age of Islam. It aligns with modern advancements while maintaining ethical principles.",
           ),
         ];
       } else {
@@ -97,47 +138,81 @@ class _FAQScreenState extends State<FAQScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+    
     return Scaffold(
-      body: Container(
-        width: double.infinity,
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [
-              Theme.of(context).colorScheme.primary.withOpacity(0.1),
-              Theme.of(context).colorScheme.surface,
-            ],
+      body: Stack(
+        children: [
+          Container(
+            color: isDarkMode ? AppColors.backgroundDark : const Color(0xFFFAFBFC),
           ),
-        ),
-        child: SafeArea(
-          child: Padding(
-            padding: EdgeInsets.all(DesignTokens.spacingMd),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                SizedBox(height: DesignTokens.spacingMd),
-                Text(
-                  'Frequently Asked Questions',
-                  style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                        color: AppColors.primaryTeal,
-                        fontWeight: FontWeight.bold,
-                      ),
+          // Background pulses
+          Positioned(
+            top: -ScreenUtil().screenHeight * 0.25,
+            left: -ScreenUtil().screenWidth * 0.25,
+            child: AnimatedBuilder(
+              animation: _pulse1,
+              builder: (_, __) => Transform.scale(
+                scale: 1 + (_pulse1.value * 0.2),
+                child: Container(
+                  width: 384.w, 
+                  height: 384.h, 
+                  decoration: BoxDecoration(
+                    color: AppColors.primaryTeal.withOpacity(0.3), 
+                    shape: BoxShape.circle
+                  )
                 ),
-                SizedBox(height: DesignTokens.spacingLg),
-                Expanded(
-                  child: _isLoading
-                      ? _buildLoadingState()
-                      : _isError
-                          ? _buildErrorState()
-                          : _faqs != null
-                              ? _buildFAQList()
-                              : _buildEmptyState(),
-                ),
-              ],
+              ),
             ),
           ),
-        ),
+          Positioned(
+            bottom: -ScreenUtil().screenHeight * 0.25,
+            right: -ScreenUtil().screenWidth * 0.25,
+            child: AnimatedBuilder(
+              animation: _pulse2,
+              builder: (_, __) => Transform.scale(
+                scale: 1 + (_pulse2.value * 0.2),
+                child: Container(
+                  width: 384.w, 
+                  height: 384.h, 
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFF6C85F).withOpacity(0.3), 
+                    shape: BoxShape.circle
+                  )
+                ),
+              ),
+            ),
+          ),
+          SafeArea(
+            child: Padding(
+              padding: EdgeInsets.all(DesignTokens.spacingMd),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SizedBox(height: DesignTokens.spacingMd),
+                  Text(
+                    'Curious about Islam? Start here.',
+                    style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                          color: AppColors.primaryTeal,
+                          fontWeight: FontWeight.bold,
+                        ),
+                    textAlign: TextAlign.center,
+                  ),
+                  SizedBox(height: DesignTokens.spacingLg),
+                  Expanded(
+                    child: _isLoading
+                        ? _buildLoadingState()
+                        : _isError
+                            ? _buildErrorState()
+                            : _faqs != null
+                                ? _buildFAQList()
+                                : _buildEmptyState(),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -178,6 +253,10 @@ class _FAQScreenState extends State<FAQScreen> {
           SizedBox(height: DesignTokens.spacingMd),
           ElevatedButton(
             onPressed: _loadFaqs,
+            style: ElevatedButton.styleFrom(
+              backgroundColor: AppColors.primaryTeal,
+              foregroundColor: Colors.white,
+            ),
             child: Text('Retry'),
           ),
         ],

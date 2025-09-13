@@ -17,7 +17,7 @@ class _QuestionScreenState extends State<QuestionScreen> {
   final _nameController = TextEditingController();
   final _emailController = TextEditingController();
   final _questionController = TextEditingController();
-  
+
   bool _isLoading = false;
   bool _isSubmitted = false;
 
@@ -50,7 +50,7 @@ class _QuestionScreenState extends State<QuestionScreen> {
           _isLoading = false;
           _isSubmitted = true;
         });
-        
+
         // Show success message
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
@@ -60,7 +60,7 @@ class _QuestionScreenState extends State<QuestionScreen> {
             ),
           );
         }
-        
+
         // Clear form
         _nameController.clear();
         _emailController.clear();
@@ -69,7 +69,7 @@ class _QuestionScreenState extends State<QuestionScreen> {
         setState(() {
           _isLoading = false;
         });
-        
+
         // Show error message
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
@@ -84,26 +84,23 @@ class _QuestionScreenState extends State<QuestionScreen> {
       setState(() {
         _isLoading = false;
       });
-      
+
       // Show specific error message
       String message = e.message;
       if (e.statusCode == 429) {
         message = 'Too many requests. Please try again later.';
       }
-      
+
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(message),
-            backgroundColor: AppColors.error,
-          ),
+          SnackBar(content: Text(message), backgroundColor: AppColors.error),
         );
       }
     } catch (e) {
       setState(() {
         _isLoading = false;
       });
-      
+
       // Show generic error message
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -119,13 +116,8 @@ class _QuestionScreenState extends State<QuestionScreen> {
   @override
   Widget build(BuildContext context) {
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
-    
+
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Ask a Question'),
-        backgroundColor: Theme.of(context).colorScheme.surface,
-        elevation: 0,
-      ),
       body: Container(
         width: double.infinity,
         decoration: BoxDecoration(
@@ -141,9 +133,7 @@ class _QuestionScreenState extends State<QuestionScreen> {
         child: SafeArea(
           child: Padding(
             padding: EdgeInsets.all(DesignTokens.spacingMd),
-            child: _isSubmitted
-                ? _buildSuccessState()
-                : _buildQuestionForm(),
+            child: _isSubmitted ? _buildSuccessState() : _buildQuestionForm(),
           ),
         ),
       ),
@@ -152,34 +142,37 @@ class _QuestionScreenState extends State<QuestionScreen> {
 
   Widget _buildSuccessState() {
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
-    
+
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
+          // Success icon with glassmorphism effect
           Container(
             padding: EdgeInsets.all(DesignTokens.spacingLg),
             decoration: BoxDecoration(
-              color: isDarkMode ? AppColors.glassDark : AppColors.glassLight,
-              borderRadius: BorderRadius.circular(DesignTokens.radiusLg),
+              color: isDarkMode
+                  ? AppColors.glassDark.withOpacity(0.7)
+                  : AppColors.glassLight.withOpacity(0.7),
+              borderRadius: BorderRadius.circular(DesignTokens.radiusXl),
               boxShadow: [
                 BoxShadow(
-                  color: isDarkMode 
-                    ? Colors.black.withOpacity(0.2) 
-                    : Colors.black.withOpacity(0.05),
+                  color: isDarkMode
+                      ? Colors.black.withOpacity(0.2)
+                      : Colors.black.withOpacity(0.05),
                   blurRadius: 16,
                   offset: const Offset(0, 4),
                 ),
               ],
             ),
             child: ClipRRect(
-              borderRadius: BorderRadius.circular(DesignTokens.radiusLg),
+              borderRadius: BorderRadius.circular(DesignTokens.radiusXl),
               child: BackdropFilter(
                 filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
                 child: Icon(
                   Icons.check_circle,
                   size: 80.r,
-                  color: Colors.green,
+                  color: AppColors.primaryTeal,
                 ),
               ),
             ),
@@ -188,16 +181,18 @@ class _QuestionScreenState extends State<QuestionScreen> {
           Text(
             'Thank You!',
             style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                  color: AppColors.primaryTeal,
-                  fontWeight: FontWeight.bold,
-                ),
+              color: AppColors.primaryTeal,
+              fontWeight: FontWeight.bold,
+            ),
           ),
           SizedBox(height: DesignTokens.spacingMd),
           Text(
             'Your question has been submitted successfully.\nAn expert will answer it soon.',
             textAlign: TextAlign.center,
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-              color: isDarkMode ? AppColors.textPrimaryDark : AppColors.textPrimaryLight,
+              color: isDarkMode
+                  ? AppColors.textPrimaryDark
+                  : AppColors.textPrimaryLight,
             ),
           ),
           SizedBox(height: DesignTokens.spacingXl),
@@ -216,6 +211,7 @@ class _QuestionScreenState extends State<QuestionScreen> {
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(DesignTokens.radiusMd),
                 ),
+                elevation: 4,
               ),
               child: const Text('Ask Another Question'),
             ),
@@ -227,223 +223,218 @@ class _QuestionScreenState extends State<QuestionScreen> {
 
   Widget _buildQuestionForm() {
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
-    
-    return Form(
-      key: _formKey,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Container(
-                padding: const EdgeInsets.all(8),
-                decoration: BoxDecoration(
-                  color: isDarkMode ? AppColors.glassDark : AppColors.glassLight,
-                  borderRadius: BorderRadius.circular(DesignTokens.radiusMd),
-                  boxShadow: [
-                    BoxShadow(
-                      color: isDarkMode 
-                        ? Colors.black.withOpacity(0.2) 
+
+    return SingleChildScrollView(
+      child: Form(
+        key: _formKey,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Header with glassmorphism effect
+            Container(
+              padding: EdgeInsets.all(DesignTokens.spacingMd),
+              decoration: BoxDecoration(
+                color: isDarkMode
+                    ? AppColors.glassDark.withOpacity(0.7)
+                    : AppColors.glassLight.withOpacity(0.7),
+                borderRadius: BorderRadius.circular(DesignTokens.radiusLg),
+                boxShadow: [
+                  BoxShadow(
+                    color: isDarkMode
+                        ? Colors.black.withOpacity(0.2)
                         : Colors.black.withOpacity(0.05),
-                      blurRadius: 8,
-                      offset: const Offset(0, 2),
+                    blurRadius: 16,
+                    offset: const Offset(0, 4),
+                  ),
+                ],
+              ),
+              child: Row(
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(8),
+                    decoration: BoxDecoration(
+                      color: AppColors.primaryTeal.withOpacity(0.2),
+                      borderRadius: BorderRadius.circular(
+                        DesignTokens.radiusMd,
+                      ),
                     ),
-                  ],
-                ),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(DesignTokens.radiusMd),
-                  child: BackdropFilter(
-                    filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
                     child: Icon(
-                      Icons.question_answer,
+                      Icons.question_answer_outlined,
                       size: 32.r,
                       color: AppColors.primaryTeal,
                     ),
                   ),
-                ),
+                  SizedBox(width: DesignTokens.spacingMd),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Have a question about Islam?',
+                          style: Theme.of(context).textTheme.headlineSmall
+                              ?.copyWith(
+                                color: isDarkMode
+                                    ? AppColors.textPrimaryDark
+                                    : AppColors.textPrimaryLight,
+                                fontWeight: FontWeight.bold,
+                              ),
+                        ),
+                        SizedBox(height: 4.h),
+                        Text(
+                          'Submit your question and an expert will provide you with an answer.',
+                          style: Theme.of(context).textTheme.bodyMedium
+                              ?.copyWith(
+                                color: isDarkMode
+                                    ? AppColors.textSecondaryDark
+                                    : AppColors.textSecondaryLight,
+                              ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
               ),
-              SizedBox(width: DesignTokens.spacingMd),
-              Expanded(
-                child: Text(
-                  'Have a question about Islam?',
-                  style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                        color: AppColors.primaryTeal,
-                        fontWeight: FontWeight.bold,
-                      ),
+            ),
+            SizedBox(height: DesignTokens.spacingLg),
+
+            // Name input field
+            _buildInputField(
+              controller: _nameController,
+              labelText: 'Your Name',
+              prefixIcon: Icons.person_outline,
+              validator: (value) {
+                if (value == null || value.trim().isEmpty) {
+                  return 'Please enter your name';
+                }
+                return null;
+              },
+            ),
+            SizedBox(height: DesignTokens.spacingMd),
+
+            // Email input field
+            _buildInputField(
+              controller: _emailController,
+              labelText: 'Your Email',
+              prefixIcon: Icons.email_outlined,
+              keyboardType: TextInputType.emailAddress,
+              validator: (value) {
+                if (value == null || value.trim().isEmpty) {
+                  return 'Please enter your email';
+                }
+                if (!RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(value)) {
+                  return 'Please enter a valid email address';
+                }
+                return null;
+              },
+            ),
+            SizedBox(height: DesignTokens.spacingMd),
+
+            // Question input field
+            _buildInputField(
+              controller: _questionController,
+              labelText: 'Your Question',
+              prefixIcon: Icons.question_answer_outlined,
+              maxLines: 5,
+              validator: (value) {
+                if (value == null || value.trim().isEmpty) {
+                  return 'Please enter your question';
+                }
+                if (value.trim().length < 10) {
+                  return 'Question must be at least 10 characters';
+                }
+                return null;
+              },
+            ),
+            SizedBox(height: DesignTokens.spacingLg),
+
+            // Submit button
+            SizedBox(
+              width: double.infinity,
+              height: DesignTokens.buttonHeight,
+              child: ElevatedButton(
+                onPressed: _isLoading ? null : _submitQuestion,
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: AppColors.primaryTeal,
+                  foregroundColor: Colors.white,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(DesignTokens.radiusMd),
+                  ),
+                  elevation: 4,
                 ),
+                child: _isLoading
+                    ? const CircularProgressIndicator(color: Colors.white)
+                    : const Text('Submit Question'),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  /// Builds an input field with consistent styling
+  Widget _buildInputField({
+    required TextEditingController controller,
+    required String labelText,
+    required IconData prefixIcon,
+    TextInputType? keyboardType,
+    int maxLines = 1,
+    required String? Function(String?) validator,
+  }) {
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+    
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          labelText,
+          style: TextStyle(
+            fontSize: 16.sp,
+            fontWeight: FontWeight.w500,
+            color: isDarkMode ? AppColors.textPrimaryDark : AppColors.textPrimaryLight,
+          ),
+        ),
+        SizedBox(height: 8.h),
+        Container(
+          decoration: BoxDecoration(
+            color: isDarkMode ? AppColors.glassDark : AppColors.glassLight,
+            borderRadius: BorderRadius.circular(12.r),
+            border: Border.all(
+              color: isDarkMode ? AppColors.neutralGray.withOpacity(0.3) : AppColors.neutralGray.withOpacity(0.2),
+            ),
+            boxShadow: [
+              BoxShadow(
+                color: isDarkMode 
+                  ? Colors.black.withOpacity(0.1) 
+                  : Colors.black.withOpacity(0.05),
+                blurRadius: 8,
+                offset: const Offset(0, 2),
               ),
             ],
           ),
-          SizedBox(height: DesignTokens.spacingMd),
-          Text(
-            'Submit your question and an expert will provide you with an answer.',
-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-              color: isDarkMode ? AppColors.textSecondaryDark : AppColors.textSecondaryLight,
-            ),
-          ),
-          SizedBox(height: DesignTokens.spacingLg),
-          Container(
-            decoration: BoxDecoration(
-              color: isDarkMode ? AppColors.glassDark : AppColors.glassLight,
-              borderRadius: BorderRadius.circular(DesignTokens.radiusMd),
-              boxShadow: [
-                BoxShadow(
-                  color: isDarkMode 
-                    ? Colors.black.withOpacity(0.2) 
-                    : Colors.black.withOpacity(0.05),
-                  blurRadius: 16,
-                  offset: const Offset(0, 4),
-                ),
-              ],
-            ),
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(DesignTokens.radiusMd),
-              child: BackdropFilter(
-                filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-                child: TextFormField(
-                  controller: _nameController,
-                  decoration: InputDecoration(
-                    labelText: 'Your Name',
-                    labelStyle: TextStyle(
-                      color: isDarkMode ? AppColors.textSecondaryDark : AppColors.textSecondaryLight,
-                    ),
-                    border: OutlineInputBorder(
-                      borderSide: BorderSide.none,
-                    ),
-                    filled: true,
-                    fillColor: Colors.transparent,
-                  ),
-                  style: TextStyle(
-                    color: isDarkMode ? AppColors.textPrimaryDark : AppColors.textPrimaryLight,
-                  ),
-                  validator: (value) {
-                    if (value == null || value.trim().isEmpty) {
-                      return 'Please enter your name';
-                    }
-                    return null;
-                  },
-                ),
+          child: TextFormField(
+            controller: controller,
+            decoration: InputDecoration(
+              prefixIcon: Icon(
+                prefixIcon,
+                color: AppColors.primaryTeal,
+              ),
+              border: InputBorder.none,
+              contentPadding: EdgeInsets.symmetric(
+                horizontal: 16.w,
+                vertical: 16.h,
               ),
             ),
+            style: TextStyle(
+              fontSize: 16.sp,
+              color: isDarkMode ? AppColors.textPrimaryDark : AppColors.textPrimaryLight,
+            ),
+            keyboardType: keyboardType,
+            maxLines: maxLines,
+            validator: validator,
           ),
-          SizedBox(height: DesignTokens.spacingMd),
-          Container(
-            decoration: BoxDecoration(
-              color: isDarkMode ? AppColors.glassDark : AppColors.glassLight,
-              borderRadius: BorderRadius.circular(DesignTokens.radiusMd),
-              boxShadow: [
-                BoxShadow(
-                  color: isDarkMode 
-                    ? Colors.black.withOpacity(0.2) 
-                    : Colors.black.withOpacity(0.05),
-                  blurRadius: 16,
-                  offset: const Offset(0, 4),
-                ),
-              ],
-            ),
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(DesignTokens.radiusMd),
-              child: BackdropFilter(
-                filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-                child: TextFormField(
-                  controller: _emailController,
-                  decoration: InputDecoration(
-                    labelText: 'Your Email',
-                    labelStyle: TextStyle(
-                      color: isDarkMode ? AppColors.textSecondaryDark : AppColors.textSecondaryLight,
-                    ),
-                    border: OutlineInputBorder(
-                      borderSide: BorderSide.none,
-                    ),
-                    filled: true,
-                    fillColor: Colors.transparent,
-                  ),
-                  style: TextStyle(
-                    color: isDarkMode ? AppColors.textPrimaryDark : AppColors.textPrimaryLight,
-                  ),
-                  keyboardType: TextInputType.emailAddress,
-                  validator: (value) {
-                    if (value == null || value.trim().isEmpty) {
-                      return 'Please enter your email';
-                    }
-                    if (!RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(value)) {
-                      return 'Please enter a valid email address';
-                    }
-                    return null;
-                  },
-                ),
-              ),
-            ),
-          ),
-          SizedBox(height: DesignTokens.spacingMd),
-          Container(
-            decoration: BoxDecoration(
-              color: isDarkMode ? AppColors.glassDark : AppColors.glassLight,
-              borderRadius: BorderRadius.circular(DesignTokens.radiusMd),
-              boxShadow: [
-                BoxShadow(
-                  color: isDarkMode 
-                    ? Colors.black.withOpacity(0.2) 
-                    : Colors.black.withOpacity(0.05),
-                  blurRadius: 16,
-                  offset: const Offset(0, 4),
-                ),
-              ],
-            ),
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(DesignTokens.radiusMd),
-              child: BackdropFilter(
-                filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-                child: TextFormField(
-                  controller: _questionController,
-                  decoration: InputDecoration(
-                    labelText: 'Your Question',
-                    labelStyle: TextStyle(
-                      color: isDarkMode ? AppColors.textSecondaryDark : AppColors.textSecondaryLight,
-                    ),
-                    border: OutlineInputBorder(
-                      borderSide: BorderSide.none,
-                    ),
-                    filled: true,
-                    fillColor: Colors.transparent,
-                  ),
-                  style: TextStyle(
-                    color: isDarkMode ? AppColors.textPrimaryDark : AppColors.textPrimaryLight,
-                  ),
-                  maxLines: 5,
-                  validator: (value) {
-                    if (value == null || value.trim().isEmpty) {
-                      return 'Please enter your question';
-                    }
-                    if (value.trim().length < 10) {
-                      return 'Question must be at least 10 characters';
-                    }
-                    return null;
-                  },
-                ),
-              ),
-            ),
-          ),
-          SizedBox(height: DesignTokens.spacingLg),
-          SizedBox(
-            width: double.infinity,
-            height: DesignTokens.buttonHeight,
-            child: ElevatedButton(
-              onPressed: _isLoading ? null : _submitQuestion,
-              style: ElevatedButton.styleFrom(
-                backgroundColor: AppColors.primaryTeal,
-                foregroundColor: Colors.white,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(DesignTokens.radiusMd),
-                ),
-              ),
-              child: _isLoading
-                  ? const CircularProgressIndicator(color: Colors.white)
-                  : const Text('Submit Question'),
-            ),
-          ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }

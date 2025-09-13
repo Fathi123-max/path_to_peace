@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'dart:ui';
 import '../theme/colors.dart';
 
@@ -12,15 +13,7 @@ class BottomNav extends StatefulWidget {
   State<BottomNav> createState() => _BottomNavState();
 }
 
-class _BottomNavState extends State<BottomNav> with TickerProviderStateMixin {
-  late AnimationController _anim;
-
-  @override
-  void initState() {
-    super.initState();
-    _anim = AnimationController(duration: Duration(milliseconds: 300), vsync: this);
-  }
-
+class _BottomNavState extends State<BottomNav> {
   @override
   Widget build(BuildContext context) {
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
@@ -62,21 +55,21 @@ class _BottomNavState extends State<BottomNav> with TickerProviderStateMixin {
                       children: [
                         Transform.scale(
                           scale: widget.currentIndex == i ? 1.1 : 1.0,
-                          child: Icon(
-                            i == 0 ? Icons.home : i == 1 ? Icons.help_outline : i == 2 ? Icons.question_answer : Icons.info_outline,
+                          child: FaIcon(
+                            i == 0 ? FontAwesomeIcons.quoteLeft : i == 1 ? FontAwesomeIcons.circleQuestion : i == 2 ? FontAwesomeIcons.comments : FontAwesomeIcons.circleInfo,
                             color: widget.currentIndex == i 
                               ? AppColors.primaryTeal 
                               : isDarkMode 
                                 ? AppColors.textSecondaryDark 
                                 : AppColors.neutralGray, 
-                            size: 28.sp
+                            size: 24.sp,
                           ),
                         ),
                         AnimatedOpacity(
                           opacity: widget.currentIndex == i ? 1.0 : 0.0,
                           duration: Duration(milliseconds: 300),
                           child: Text(
-                            ['Home', 'FAQ', 'Questions', 'About'][i], 
+                            ['Quotes', 'FAQ', 'Questions', 'About'][i], 
                             style: TextStyle(
                               fontSize: 12.sp, 
                               fontWeight: FontWeight.w500, 

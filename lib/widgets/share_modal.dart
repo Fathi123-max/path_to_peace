@@ -3,7 +3,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:lottie/lottie.dart';
-import '../theme/colors.dart';
 import '../theme/design_tokens.dart';
 import '../theme/typography.dart';
 
@@ -60,6 +59,9 @@ class _ShareModalState extends State<ShareModal>
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
+    
     return Scaffold(
       backgroundColor: Colors.transparent,
       body: Container(
@@ -81,7 +83,7 @@ class _ShareModalState extends State<ShareModal>
               child: Container(
                 height: 300.h,
                 decoration: BoxDecoration(
-                  color: Theme.of(context).colorScheme.surface,
+                  color: colorScheme.surface,
                   borderRadius: BorderRadius.vertical(
                     top: Radius.circular(DesignTokens.radiusXl),
                   ),
@@ -97,16 +99,14 @@ class _ShareModalState extends State<ShareModal>
                         children: [
                           Text(
                             widget.title,
-                            style: AppTypography.headlineMedium(context),
+                            style: AppTypography.headlineMedium,
                           ),
                           IconButton(
                             onPressed: () => Navigator.of(context).pop(),
                             icon: Icon(
                               Icons.close,
                               size: DesignTokens.iconMd,
-                              color: Theme.of(
-                                context,
-                              ).textTheme.bodyLarge?.color,
+                              color: textTheme.bodyLarge?.color,
                             ),
                           ),
                         ],
@@ -116,9 +116,7 @@ class _ShareModalState extends State<ShareModal>
                       Container(
                         height: 80.h,
                         decoration: BoxDecoration(
-                          color: Theme.of(
-                            context,
-                          ).colorScheme.surface.withOpacity(0.7),
+                          color: colorScheme.surface.withOpacity(0.7),
                           borderRadius: BorderRadius.circular(
                             DesignTokens.radiusMd,
                           ),
@@ -127,7 +125,7 @@ class _ShareModalState extends State<ShareModal>
                           padding: EdgeInsets.all(DesignTokens.spacingSm),
                           child: Text(
                             widget.content,
-                            style: AppTypography.bodySmall(context),
+                            style: AppTypography.bodySmall,
                             maxLines: 3,
                             overflow: TextOverflow.ellipsis,
                           ),
@@ -181,6 +179,8 @@ class _ShareModalState extends State<ShareModal>
     required VoidCallback onTap,
     bool isSpecial = false,
   }) {
+    final colorScheme = Theme.of(context).colorScheme;
+    
     return Column(
       children: [
         GestureDetector(
@@ -190,8 +190,8 @@ class _ShareModalState extends State<ShareModal>
             height: 60.r,
             decoration: BoxDecoration(
               color: isSpecial
-                  ? AppColors.success
-                  : Theme.of(context).colorScheme.primary.withOpacity(0.1),
+                  ? const Color(0xFF10B981)  // success color
+                  : colorScheme.primary.withOpacity(0.1),
               shape: BoxShape.circle,
             ),
             child: Center(
@@ -209,14 +209,14 @@ class _ShareModalState extends State<ShareModal>
                       icon,
                       color: isSpecial
                           ? Colors.white
-                          : Theme.of(context).colorScheme.primary,
+                          : colorScheme.primary,
                       size: DesignTokens.iconMd,
                     ),
             ),
           ),
         ),
         SizedBox(height: DesignTokens.spacingXs),
-        Text(label, style: AppTypography.labelSmall(context)),
+        Text(label, style: AppTypography.labelSmall),
       ],
     );
   }

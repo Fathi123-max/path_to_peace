@@ -5,7 +5,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:animations/animations.dart';
 import '../models/quote.dart';
 import '../widgets/share_modal.dart';
-import '../theme/colors.dart';
 import '../theme/design_tokens.dart';
 
 class QuoteCard extends StatefulWidget {
@@ -43,6 +42,9 @@ class _QuoteCardState extends State<QuoteCard>
 
   @override
   Widget build(BuildContext context) {
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+    final colorScheme = Theme.of(context).colorScheme;
+    
     return Center(
       child: ConstrainedBox(
         constraints: BoxConstraints(
@@ -58,7 +60,9 @@ class _QuoteCardState extends State<QuoteCard>
               height: 500.h, // h-[500px] from CSS
               width: double.infinity,
               decoration: BoxDecoration(
-                color: AppColors.glassLight, // rgba(255, 255, 255, 0.3) from CSS
+                color: isDarkMode 
+                    ? colorScheme.surface.withOpacity(0.3) 
+                    : Colors.white.withOpacity(0.3), // rgba(255, 255, 255, 0.3) from CSS
                 borderRadius: BorderRadius.circular(DesignTokens.radiusXl), // rounded-2xl
                 boxShadow: [
                   BoxShadow(
@@ -90,7 +94,9 @@ class _QuoteCardState extends State<QuoteCard>
                                   fontSize: 36.sp, // text-[36px] on md screens
                                   fontWeight: FontWeight.bold,
                                   height: 1.2, // leading-tight
-                                  color: const Color(0xFF1E293B), // text-slate-800
+                                  color: isDarkMode 
+                                      ? colorScheme.onSurface 
+                                      : const Color(0xFF1E293B), // text-slate-800
                                 ),
                               ),
                               SizedBox(height: DesignTokens.spacingLg),
@@ -102,7 +108,9 @@ class _QuoteCardState extends State<QuoteCard>
                                   fontFamily: 'Lato', // Lato font for body
                                   fontSize: 18.sp, // text-[18px] on md screens
                                   fontWeight: FontWeight.normal,
-                                  color: const Color(0xFF475569), // text-slate-600
+                                  color: isDarkMode 
+                                      ? colorScheme.onSurfaceVariant 
+                                      : const Color(0xFF475569), // text-slate-600
                                 ),
                               ),
                             ],
@@ -120,7 +128,7 @@ class _QuoteCardState extends State<QuoteCard>
                                 width: 56.r, // w-14
                                 height: 56.r, // h-14
                                 decoration: BoxDecoration(
-                                  color: AppColors.primaryTeal, // var(--primary-color)
+                                  color: colorScheme.primary, // var(--primary-color)
                                   shape: BoxShape.circle,
                                   boxShadow: [
                                     BoxShadow(

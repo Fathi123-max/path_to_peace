@@ -1,6 +1,5 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
-import '../theme/colors.dart';
 import '../theme/design_tokens.dart';
 
 class SectionCard extends StatelessWidget {
@@ -32,17 +31,18 @@ class SectionCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+    final colorScheme = Theme.of(context).colorScheme;
     
     // Default glass effect colors based on theme
     final glassColor = isDarkMode 
-        ? AppColors.glassDark 
-        : AppColors.glassLight;
+        ? colorScheme.surface.withOpacity(0.3) 
+        : Colors.white.withOpacity(0.3);
         
     // Default background color
     final bg = backgroundColor ?? 
         (withGlassEffect 
-            ? Theme.of(context).colorScheme.surface.withOpacity(0.8)
-            : Theme.of(context).colorScheme.surface);
+            ? colorScheme.surface.withOpacity(0.8)
+            : colorScheme.surface);
             
     // Default shadows
     final shadowList = shadows ?? [DesignTokens.shadowMd];
